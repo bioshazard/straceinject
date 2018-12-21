@@ -1,4 +1,30 @@
 
+# How to inject
+
+Add this to the top of your `index.php`
+
+```
+// TODO: Consolidate to, `include 'straceinject.php';`
+// TODO: Thread-aware trace, not needed for low traffic scenario.
+
+class __________epilogue {
+  public function __construct() {
+    $pid = getmypid();
+    $filename = date('U').'_'.uniqid().str_replace('/', '_', $_SERVER['REQUEST_URI']);
+    $result = json_decode(file_get_contents("http://localhost:1337/strace/inject/$pid/$filename"), true);
+    $this->uuid = $result["uuid"];
+  }
+  public function __destruct() {
+    $result = file_get_contents("http://localhost:1337/strace/kill/".$this->uuid);
+  }
+}
+
+// This will garbage collect at the end of the PHP page excution, ensuring the __destruct is the last thing to run
+$lastSay = new __________epilogue();
+```
+
+If developing,
+
 ```
 # Requires,
 yum install -y rh-python36-python rh-python36-python-pip
