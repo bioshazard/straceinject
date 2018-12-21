@@ -1,6 +1,15 @@
 
 # How to inject
 
+## Run This first
+
+```
+chmod +x straceinject
+./straceinject
+```
+
+## Then Add this to index.php
+
 Add this to the top of your `index.php`
 
 ```
